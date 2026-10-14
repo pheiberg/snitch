@@ -42,6 +42,14 @@ namespace Snitch.Analysis.Utilities
             return FindProjects(null, out entry);
         }
 
+        public static bool IsDotNetProject(string path)
+        {
+            var extension = Path.GetExtension(path);
+            return extension.Equals(".csproj", StringComparison.OrdinalIgnoreCase)
+                || extension.Equals(".fsproj", StringComparison.OrdinalIgnoreCase)
+                || extension.Equals(".vbproj", StringComparison.OrdinalIgnoreCase);
+        }
+
         private static List<string> GetProjectsFromFile(string path)
         {
             if (path.EndsWith("proj", StringComparison.InvariantCulture))
@@ -70,8 +78,8 @@ namespace Snitch.Analysis.Utilities
 
             if (slns.Length == 0)
             {
-                // F# projects are analyzed just like C# ones, so discover them too.
-                var subProjects = Directory.GetFiles(root, "*.csproj").Concat(Directory.GetFiles(root, "*.fsproj")).ToArray();
+                // F# and VB.NET projects are analyzed just like C# ones, so discover them too.
+                var subProjects = Directory.GetFiles(root).Where(IsDotNetProject).ToArray();
                 if (subProjects.Length == 0)
                 {
                     throw new InvalidOperationException("No project or solution file found.");

@@ -416,6 +416,36 @@ namespace Sntich.Tests
         }
 
         [Fact]
+        [Expectation("VisualBasic", "Reference")]
+        public async Task Should_Analyze_A_Referenced_VisualBasic_Project()
+        {
+            // Given
+            var project = Fixture.GetPath("VisualBasic/App/App.csproj");
+
+            // When
+            var (exitCode, output) = await Fixture.Run(project);
+
+            // Then
+            exitCode.ShouldBe(0);
+            await Verifier.Verify(output);
+        }
+
+        [Fact]
+        [Expectation("VisualBasic", "Discovered")]
+        public async Task Should_Find_A_VisualBasic_Project_In_A_Directory()
+        {
+            // Given
+            var directory = Fixture.GetPath("VisualBasic/Lib");
+
+            // When
+            var (exitCode, output) = await Fixture.Run(directory);
+
+            // Then
+            exitCode.ShouldBe(0);
+            await Verifier.Verify(output);
+        }
+
+        [Fact]
         [Expectation("Pinned", "Default")]
         public async Task Should_Not_Interpret_A_Pinned_Package_Version_As_Markup()
         {
