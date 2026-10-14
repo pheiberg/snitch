@@ -1,0 +1,75 @@
+﻿[
+  {
+    "Project": "Bar",
+    "CanBeRemoved": [
+      {
+        "PackageName": "Autofac",
+        "PackageVersion": "4.9.4",
+        "ReferencedBy": "Foo"
+      }
+    ],
+    "MightBeRemoved": [],
+    "PreRelease": []
+  },
+  {
+    "Project": "Baz",
+    "CanBeRemoved": [
+      {
+        "PackageName": "Autofac",
+        "PackageVersion": "4.9.4",
+        "ReferencedBy": "Foo"
+      }
+    ],
+    "MightBeRemoved": [],
+    "PreRelease": []
+  },
+  {
+    "Project": "Qux",
+    "CanBeRemoved": [],
+    "MightBeRemoved": [
+      {
+        "PackageName": "Autofac",
+        "PackageVersion": "4.9.3",
+        "ReferencedBy": "Foo",
+        "ReferencePackageVersion": "4.9.4",
+        "Reason": "Downgraded"
+      }
+    ],
+    "PreRelease": []
+  },
+  {
+    "Project": "Zap",
+    "CanBeRemoved": [],
+    "MightBeRemoved": [
+      {
+        "PackageName": "Newtonsoft.Json",
+        "PackageVersion": "13.0.3",
+        "ReferencedBy": "Foo",
+        "ReferencePackageVersion": "13.0.1",
+        "Reason": "Updated"
+      },
+      {
+        "PackageName": "Autofac",
+        "PackageVersion": "4.9.3",
+        "ReferencedBy": "Foo",
+        "ReferencePackageVersion": "4.9.4",
+        "Reason": "Downgraded"
+      }
+    ],
+    "PreRelease": []
+  },
+  {
+    "Project": "Thuuud",
+    "CanBeRemoved": [],
+    "MightBeRemoved": [
+      {
+        "PackageName": "Newtonsoft.Json",
+        "PackageVersion": "13.0.2-beta2",
+        "ReferencedBy": "Foo",
+        "ReferencePackageVersion": "13.0.1",
+        "Reason": "Updated"
+      }
+    ],
+    "PreRelease": []
+  }
+]

@@ -1,0 +1,16 @@
+﻿[
+  {
+    "Project": "App",
+    "CanBeRemoved": [],
+    "MightBeRemoved": [
+      {
+        "PackageName": "Autofac",
+        "PackageVersion": "[4.9.4]",
+        "ReferencedBy": "Lib",
+        "ReferencePackageVersion": "[4.9.3]",
+        "Reason": "Updated"
+      }
+    ],
+    "PreRelease": []
+  }
+]

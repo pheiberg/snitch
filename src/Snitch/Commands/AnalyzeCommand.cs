@@ -18,6 +18,7 @@ namespace Snitch.Commands
         private readonly ProjectBuilder _builder;
         private readonly ProjectAnalyzer _analyzer;
         private readonly ProjectReporter _reporter;
+        private readonly ProjectFileReporter _fileReporter;
 
         public sealed class Settings : CommandSettings
         {
@@ -44,6 +45,23 @@ namespace Snitch.Commands
             [CommandOption("--no-prerelease")]
             [Description("Verifies that all package references are not pre-releases.")]
             public bool NoPreRelease { get; set; }
+
+            [CommandOption("-o|--out <FILE>")]
+            [Description("Writes the result as JSON to the specified file.")]
+            public string? OutputFileName { get; set; }
+
+            public override ValidationResult Validate()
+            {
+                if (OutputFileName == null)
+                {
+                    return ValidationResult.Success();
+                }
+
+                var directory = Path.GetDirectoryName(Path.GetFullPath(OutputFileName));
+                return Directory.Exists(directory)
+                    ? ValidationResult.Success()
+                    : ValidationResult.Error($"The directory of the output file '{OutputFileName}' does not exist.");
+            }
         }
 
         public AnalyzeCommand(IAnsiConsole console)
@@ -52,6 +70,7 @@ namespace Snitch.Commands
             _builder = new ProjectBuilder(console);
             _analyzer = new ProjectAnalyzer();
             _reporter = new ProjectReporter(console);
+            _fileReporter = new ProjectFileReporter(console);
         }
 
         public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
@@ -106,6 +125,11 @@ namespace Snitch.Commands
 
                 // Write the report to the console
                 _reporter.WriteToConsole(analyzerResults, settings.NoPreRelease);
+
+                if (settings.OutputFileName != null)
+                {
+                    _fileReporter.WriteToFile(analyzerResults, settings.OutputFileName, settings.NoPreRelease);
+                }
 
                 // Return the correct exit code.
                 return GetExitCode(settings, analyzerResults);

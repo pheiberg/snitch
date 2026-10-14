@@ -2,6 +2,7 @@ using Shouldly;
 using Snitch;
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Spectre.Console.Cli;
 using Spectre.Console.Testing;
@@ -598,6 +599,113 @@ namespace Sntich.Tests
             // Then
             exitCode.ShouldBe(0);
             await Verifier.Verify(output);
+        }
+
+        [Fact]
+        [Expectation("Baz", "Json")]
+        public async Task Should_Write_Json_For_Baz()
+        {
+            // Given
+            var project = Fixture.GetPath("Baz/Baz.csproj");
+            using var file = new TempFile();
+
+            // When
+            var (exitCode, _) = await Fixture.Run(project, "--out", file.Path);
+
+            // Then
+            exitCode.ShouldBe(0);
+            await Verifier.VerifyFile(file.Path);
+        }
+
+        [Fact]
+        [Expectation("Solution", "Json")]
+        public async Task Should_Write_Json_For_A_Solution()
+        {
+            // Given
+            var project = Fixture.GetPath("Snitch.Tests.Fixtures.sln");
+            using var file = new TempFile();
+
+            // When
+            var (exitCode, _) = await Fixture.Run(project, "--out", file.Path);
+
+            // Then
+            exitCode.ShouldBe(0);
+            await Verifier.VerifyFile(file.Path);
+        }
+
+        [Fact]
+        [Expectation("Thuuud", "Json.NoPreRelease")]
+        public async Task Should_Write_Pre_Release_Packages_To_Json_When_Running_With_NoPreRelease()
+        {
+            // Given
+            var project = Fixture.GetPath("Thuuud/Thuuud.csproj");
+            using var file = new TempFile();
+
+            // When
+            var (exitCode, _) = await Fixture.Run(project, "--out", file.Path, "--no-prerelease");
+
+            // Then
+            exitCode.ShouldBe(0);
+            await Verifier.VerifyFile(file.Path);
+        }
+
+        [Fact]
+        [Expectation("Pinned", "Json")]
+        public async Task Should_Write_Version_Ranges_To_Json()
+        {
+            // Given
+            var project = Fixture.GetPath("Pinned/App/App.csproj");
+            using var file = new TempFile();
+
+            // When
+            var (exitCode, _) = await Fixture.Run(project, "--out", file.Path);
+
+            // Then
+            exitCode.ShouldBe(0);
+            await Verifier.VerifyFile(file.Path);
+        }
+
+        [Fact]
+        [Expectation("Foo", "Json")]
+        public async Task Should_Write_An_Empty_Json_Array_When_Nothing_Is_Found()
+        {
+            // Given
+            var project = Fixture.GetPath("Foo/Foo.csproj");
+            using var file = new TempFile();
+
+            // When
+            var (exitCode, _) = await Fixture.Run(project, "--out", file.Path);
+
+            // Then
+            exitCode.ShouldBe(0);
+            await Verifier.VerifyFile(file.Path);
+        }
+
+        [Fact]
+        public async Task Should_Fail_Before_Analyzing_When_The_Output_Directory_Does_Not_Exist()
+        {
+            // Given
+            var project = Fixture.GetPath("Baz/Baz.csproj");
+            var file = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "snitch.json");
+
+            // When
+            var (exitCode, output) = await Fixture.Run(project, "--out", file);
+
+            // Then
+            exitCode.ShouldBe(-1);
+            Regex.Replace(output, @"\s+", " ").ShouldContain("does not exist.");
+            output.ShouldNotContain("Analyzing");
+        }
+
+        private sealed class TempFile : IDisposable
+        {
+            public string Path { get; } = System.IO.Path.Combine(
+                System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName() + ".json");
+
+            public void Dispose()
+            {
+                File.Delete(Path);
+            }
         }
     }
 }

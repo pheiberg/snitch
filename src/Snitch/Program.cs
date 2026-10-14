@@ -37,6 +37,7 @@ namespace Snitch
                 config.AddExample(new[] { "Solution.sln", "-e", "Foo", "-e", "Bar" });
                 config.AddExample(new[] { "Solution.sln", "--tfm", "net462" });
                 config.AddExample(new[] { "Solution.sln", "--tfm", "net462", "--strict" });
+                config.AddExample(new[] { "Solution.sln", "--tfm", "net462", "--out", "snitch.json" });
 
                 config.AddCommand<VersionCommand>("version");
             });
