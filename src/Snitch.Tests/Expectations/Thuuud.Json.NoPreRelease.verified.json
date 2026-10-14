@@ -1,0 +1,21 @@
+﻿[
+  {
+    "Project": "Thuuud",
+    "CanBeRemoved": [],
+    "MightBeRemoved": [
+      {
+        "PackageName": "Newtonsoft.Json",
+        "PackageVersion": "13.0.2-beta2",
+        "ReferencedBy": "Foo",
+        "ReferencePackageVersion": "13.0.1",
+        "Reason": "Updated"
+      }
+    ],
+    "PreRelease": [
+      {
+        "PackageName": "Newtonsoft.Json",
+        "PackageVersion": "13.0.2-beta2"
+      }
+    ]
+  }
+]

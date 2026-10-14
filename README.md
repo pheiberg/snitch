@@ -125,6 +125,23 @@ _Examine a specific project or solution to make sure there are no pre-release pa
 > snitch MyProject.csproj --no-prerelease
 ```
 
+_Examine a specific project or solution and write the result as JSON to a file._
+
+```
+> snitch MyProject.csproj --out snitch.json
+```
+
+Each entry has the project and the packages it can remove, might remove and, with
+`--no-prerelease`, the pre-release packages it references. Projects are identified by name,
+so the output is ambiguous if two analyzed projects share a name.
+
+The JSON can be used to uninstall the detected packages from the package manager console in Visual Studio:
+
+```
+function Uninstall-FromSnitch { param($filename) (Get-Content $filename | ConvertFrom-Json) | %{ $p = $_.Project; foreach ($c in $_.CanBeRemoved) { Uninstall-Package $c.PackageName -ProjectName $p } } }
+Uninstall-FromSnitch snitch.json
+```
+
 ## Building Snitch from source
 
 ```

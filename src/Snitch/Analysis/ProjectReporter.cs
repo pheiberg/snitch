@@ -65,30 +65,22 @@ namespace Snitch.Analysis
 
                     foreach (var item in result.MightBeRemoved)
                     {
-                        if (item.Package.IsGreaterThan(item.Original.Package, out var indeterminate))
+                        var verb = item.MismatchReason switch
                         {
-                            var name = item.Original.Project.Name.EscapeMarkup();
-                            var version = item.Original.Package.GetVersionString().EscapeMarkup();
-                            var verb = indeterminate ? "Might be updated from" : "Updated from";
-                            var reason = $"[grey]{verb}[/] [silver]{version}[/] [grey]in[/] [aqua]{name}[/]";
+                            VersionMismatchReason.Updated => "Updated from",
+                            VersionMismatchReason.MightBeUpdated => "Might be updated from",
+                            VersionMismatchReason.Downgraded => "Downgraded from",
+                            _ => "Does not match",
+                        };
 
-                            table.AddRow(
-                                $"[green]{item.Package.Name.EscapeMarkup()}[/]",
-                                item.Package.GetVersionString().EscapeMarkup(),
-                                reason);
-                        }
-                        else
-                        {
-                            var name = item.Original.Project.Name.EscapeMarkup();
-                            var version = item.Original.Package.GetVersionString().EscapeMarkup();
-                            var verb = indeterminate ? "Does not match" : "Downgraded from";
-                            var reason = $"[grey]{verb}[/] [silver]{version}[/] [grey]in[/] [aqua]{name}[/]";
+                        var name = item.Original.Project.Name.EscapeMarkup();
+                        var version = item.Original.Package.GetVersionString().EscapeMarkup();
+                        var reason = $"[grey]{verb}[/] [silver]{version}[/] [grey]in[/] [aqua]{name}[/]";
 
-                            table.AddRow(
-                                $"[green]{item.Package.Name.EscapeMarkup()}[/]",
-                                item.Package.GetVersionString().EscapeMarkup(),
-                                reason);
-                        }
+                        table.AddRow(
+                            $"[green]{item.Package.Name.EscapeMarkup()}[/]",
+                            item.Package.GetVersionString().EscapeMarkup(),
+                            reason);
                     }
 
                     report.AddRow($" [yellow]Packages that [u]might[/] be removed from[/] [aqua]{result.Project.EscapeMarkup()}[/]:");
