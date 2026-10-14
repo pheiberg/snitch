@@ -1,0 +1,14 @@
+﻿Analyzing...
+Analyzing Lib.vbproj
+Analyzing Lib...
+  * Analyzing Bar (netstandard2.0)...
+    * Analyzing Foo (netstandard2.0)...
+
+╭─────────────────────────────────────────╮
+│  Packages that can be removed from Lib: │
+│ ┌──────────────┬──────────────────────┐ │
+│ │ Package      │ Referenced by        │ │
+│ ├──────────────┼──────────────────────┤ │
+│ │ Autofac      │ Foo                  │ │
+│ └──────────────┴──────────────────────┘ │
+╰─────────────────────────────────────────╯
