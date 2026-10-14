@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Buildalyzer;
+using Buildalyzer.IO;
 using NuGet.Frameworks;
 using NuGet.ProjectModel;
 using Snitch.Analysis.Utilities;
@@ -234,7 +235,8 @@ namespace Snitch.Analysis
 
             _console.MarkupLine(status);
 
-            var projectAnalyzer = manager.GetProject(project.Path);
+            var projectAnalyzer = manager.GetProject(IOPath.Parse(project.Path))
+                ?? throw new InvalidOperationException($"Could not load the project '{project.Path}'.");
             var results = (IEnumerable<IAnalyzerResult>)projectAnalyzer.Build();
 
             project.IsMultiTargeting = results
