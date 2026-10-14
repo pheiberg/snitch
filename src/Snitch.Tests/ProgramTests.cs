@@ -12,7 +12,6 @@ using VerifyXunit;
 
 namespace Sntich.Tests
 {
-    [UsesVerify]
     public class ProgramTests
     {
         [Fact]

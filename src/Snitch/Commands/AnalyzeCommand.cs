@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Snitch.Analysis;
 using Snitch.Analysis.Utilities;
 using Spectre.Console;
@@ -73,7 +74,7 @@ namespace Snitch.Commands
             _fileReporter = new ProjectFileReporter(console);
         }
 
-        public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
+        public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings, CancellationToken cancellation)
         {
             var projectsToAnalyze = PathUtility.GetProjectPaths(settings.ProjectOrSolutionPath, out var entry);
 
